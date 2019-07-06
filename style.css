@@ -1,0 +1,9 @@
+body{
+    background-image: url(/resources/images/pokertable.jpg);
+    background-repeat: no-repeat;
+}
+
+img {
+    width: 70px;
+    height: 105px;
+}
