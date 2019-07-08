@@ -1,25 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <link href="https://fonts.googleapis.com/css?family=Lato:100,300,600" rel="stylesheet" type="text/css">
-        <link href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet" type="text/css">
-        <link type="text/css" rel="stylesheet" href="style.css">
-        
-        <title>Black Jack</title>
-    </head>
 
-    <body>
-        <div class="Main-Container">
-            <div class="Dealer">
-                <img src="resources/images/2C.png" alt="card 1">
-            </div>
-            <div class="Dealer2 Card2">
-                <img src="resources/images/8S.png" alt="card 2">
-            </div>
-        </div>
-   
-        
-        <script src="script.js"></script>
-    </body>
+<head>
+   <meta charset="UTF-8">
+   <link
+      href="https://fonts.googleapis.com/css?family=Lato:100,300,600"
+      rel="stylesheet" type="text/css">
+   <link
+      href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"
+      rel="stylesheet" type="text/css">
+   <link type="text/css" rel="stylesheet"
+      href="style.css">
+
+   <title>Black Jack</title>
+</head>
+
+<body>
+     <h3 id="title">Black Jack</h3>
+   <div class="MainContainer">
+      <div class="Dealer">
+          <p>Dealer</p>
+         <div class="Card">
+            <img id="dcard1" src="resources/images/red_back.png"
+               alt="dealer card 1">
+         </div>
+         <div class="Card" >
+            <img id="dcard2" src="resources/images/red_back.png"
+               alt="dealer card 2">
+         </div>
+      </div>
+      <div class="Player">
+           <p>Player</p>
+         <div class="Card" >
+            <img id="pcard1" src="resources/images/red_back.png"
+               alt="player card 1">
+         </div>
+         <div class="Card" >
+            <img id="pcard2" src="resources/images/red_back.png"
+               alt="card 1">
+         </div>
+      </div>
+       <div class="PlayButtonContainer">
+           <button class="btn-deal" ><i class="ion-ios-loop"></i>Deal</button>
+       </div>
+   </div>
+
+
+   <script src="script.js"></script>
+</body>
+
 </html>
