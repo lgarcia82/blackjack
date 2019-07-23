@@ -11,8 +11,8 @@ body{
     color: floralwhite;
 }
 .MainContainer{
-    width: 50%;
-    margin: 5% 25%;
+    margin-left: 3%;
+    margin-right: 3%;
 }
 #title{
     text-align: center;
@@ -31,26 +31,50 @@ body{
     width: 70px;
     height:105px;
 }
-
+.Score{
+    padding-top: 35px;
+    font-size: 50px;
+    font-weight: 600;
+}
 .Dealer{
-    position: relative;
+    width: 50%;
+    float: left;
     margin-top: 5%;
     text-align: center;
     font-size: 30px;
 }
 
 .Player{
-  position: relative;
+    width: 50%;
+    float: left;
     margin-top: 5%;
     text-align: center;
     font-size: 30px;
 }
-.PlayButtonContainer{
-    text-align: center;
-    margin-top: 50px;
-    
+.active .player-name::after{
+    content: "\22C6";
+    position: absolute;
+    margin-left: 5px;
 }
 
+.NewGameBtnContainer{
+    text-align: center;
+    margin-top: 50px;
+}
+.DealBtnContainer{
+    position: relative;
+    text-align: center;
+}
+.PlayBtnContainer{
+    text-align: center;
+    display: flex;
+    width: 20%;
+    float:right;
+    margin-right: 16%;
+}
+#dealBtn{
+    padding-top: 100px;
+}
 button{
     width: 50%;
     height: 50px;
@@ -59,7 +83,6 @@ button{
     border: none;
     font-size: 20px;
 }
-
 button:hover { font-weight: 600; }
 button:hover i { margin-right: 20px; }
 

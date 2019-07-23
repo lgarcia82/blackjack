@@ -17,9 +17,12 @@
 
 <body>
      <h3 id="title">Black Jack</h3>
+    <div class="NewGameBtnContainer">
+      <button class="btn-new"><i class="ion-ios-plus-outline"></i>New game</button>
+  </div>
    <div class="MainContainer">
-      <div class="Dealer">
-          <p>Dealer</p>
+      <div class="Dealer active">
+         <div class="player-name" id="name-1">Dealer</div>
          <div class="Card">
             <img id="dcard1" src="resources/images/red_back.png"
                alt="dealer card 1">
@@ -28,9 +31,10 @@
             <img id="dcard2" src="resources/images/red_back.png"
                alt="dealer card 2">
          </div>
+          <div class="Score">21</div>
       </div>
       <div class="Player">
-           <p>Player</p>
+           <div class="player-name" id="name-1">Player</div>
          <div class="Card" >
             <img id="pcard1" src="resources/images/red_back.png"
                alt="player card 1">
@@ -39,12 +43,22 @@
             <img id="pcard2" src="resources/images/red_back.png"
                alt="card 1">
          </div>
+        <!--  <div class="Card" >
+            <img id="pcard2" src="resources/images/red_back.png"
+               alt="card 1">
+         </div> -->
+          <div class="Score">21</div>
       </div>
-       <div class="PlayButtonContainer">
-           <button class="btn-deal" ><i class="ion-ios-loop"></i>Deal</button>
-       </div>
+       
+        <div class= DealBtnContainer>
+            <button id= "dealBtn" class="btn-roll"><i class="ion-ios-loop"></i>Deal</button>
+        </div>
    </div>
-
+    <div class="PlayBtnContainer">
+        <button id= "hitBtn"><i class="ion-ios-arrow-up"></i>Hit</button>
+        <button id= "stayBtn"><i class="ion-ios-download-outline"></i>Stay</button>
+    </div>
+   
 
    <script src="script.js"></script>
 </body>
