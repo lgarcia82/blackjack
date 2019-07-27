@@ -3,62 +3,65 @@
 
 <head>
    <meta charset="UTF-8">
-   <link
-      href="https://fonts.googleapis.com/css?family=Lato:100,300,600"
-      rel="stylesheet" type="text/css">
-   <link
-      href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"
-      rel="stylesheet" type="text/css">
-   <link type="text/css" rel="stylesheet"
-      href="style.css">
+   <link href="https://fonts.googleapis.com/css?family=Lato:100,300,600" rel="stylesheet"
+      type="text/css">
+   <link href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet"
+      type="text/css">
+   <link type="text/css" rel="stylesheet" href="style.css">
 
    <title>Black Jack</title>
 </head>
 
 <body>
-     <h3 id="title">Black Jack</h3>
-    <div class="NewGameBtnContainer">
-      <button class="btn-new"><i class="ion-ios-plus-outline"></i>New game</button>
-  </div>
+   <h3 id="title">Black Jack</h3>
+   <div class="NewGameBtnContainer">
+      <button class="NewGameBtn"><i class="ion-ios-plus-outline"></i>New
+         game</button>
+   </div>
    <div class="MainContainer">
       <div class="Dealer active">
-         <div class="player-name" id="name-1">Dealer</div>
-         <div class="Card">
-            <img id="dcard1" src="resources/images/red_back.png"
-               alt="dealer card 1">
+         <div class="player-name" id="name-1">
+            Dealer</div>
+         <div class="DcardContainer">
+            <div class="Card">
+               <img id="dcard1" src="resources/images/red_back.png" alt="dealer card 1">
+            </div>
+            <div class="Card">
+               <img id="dcard2" src="resources/images/red_back.png" alt="dealer card 2">
+            </div>
          </div>
-         <div class="Card" >
-            <img id="dcard2" src="resources/images/red_back.png"
-               alt="dealer card 2">
+         <div id="dealer-score" class="Score">21
          </div>
-          <div class="Score">21</div>
       </div>
       <div class="Player">
-           <div class="player-name" id="name-1">Player</div>
-         <div class="Card" >
-            <img id="pcard1" src="resources/images/red_back.png"
-               alt="player card 1">
-         </div>
-         <div class="Card" >
-            <img id="pcard2" src="resources/images/red_back.png"
-               alt="card 1">
-         </div>
-        <!--  <div class="Card" >
+         <div class="player-name" id="name-1">
+            Player</div>
+         <div class="PcardContainer">
+            <div class="Card">
+               <img id="pcard1" src="resources/images/red_back.png" alt="player card 1">
+            </div>
+            <div class="Card">
+               <img id="pcard2" src="resources/images/red_back.png" alt="card 1">
+            </div>
+            <!--  <div class="Card" >
             <img id="pcard2" src="resources/images/red_back.png"
                alt="card 1">
          </div> -->
-          <div class="Score">21</div>
+         </div>
+         <div id="player-score" class="Score">21
+         </div>
       </div>
-       
-        <div class= DealBtnContainer>
-            <button id= "dealBtn" class="btn-roll"><i class="ion-ios-loop"></i>Deal</button>
-        </div>
+
+      <div class=DealBtnContainer>
+         <button id="dealBtn" class="dealBtn"><i class="ion-ios-loop"></i>Deal</button>
+      </div>
+      <div class="PlayBtnContainer">
+         <button id="hitBtn"><i class="ion-ios-arrow-up"></i>Hit</button>
+         <button id="standBtn"><i class="ion-ios-download-outline"></i>Stand</button>
+      </div>
    </div>
-    <div class="PlayBtnContainer">
-        <button id= "hitBtn"><i class="ion-ios-arrow-up"></i>Hit</button>
-        <button id= "stayBtn"><i class="ion-ios-download-outline"></i>Stay</button>
-    </div>
    
+
 
    <script src="script.js"></script>
 </body>
