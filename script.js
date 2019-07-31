@@ -25,8 +25,14 @@ var gameController = (function () {
       this.bjVal = bjVal;
    };
 
-   return {
+   var data = {
+      Hand: {
+         dealer: [],
+         player: []
+      }
+   };
 
+   return {
       createDeck: function () {
          var deck = [];
 
@@ -59,12 +65,13 @@ var gameController = (function () {
          return deck;
       },
 
-      getPointTotal: function (deck) {
+      getPointTotal: function (hand) {
+         var pointTotal = 0;
+         for (var i = 0; i < hand.length; i++) {
 
-      },
-
-      getCardFn: function (deck) {
-
+            pointTotal += hand[i].bjVal;
+         }
+         return pointTotal;
       }
    };
 
@@ -105,71 +112,79 @@ var UIController = (function () {
          document.querySelector(DOMstrings.playBtnContainer).style.display = 'none';
       },
 
-      deal: function (deck, baseVal) {
-
-
-         var gameStartIndex = baseVal;
-         // MAKE A FUNCTION TO RETURN A CARD FILENAME FOR PING IMAGE
-
-         var dcard1, pcard1, dcard2, pcard2, playerScore, dealerScore, card;
-         dcard1 = deck[baseVal].value + deck[baseVal].suit;
-         pcard1 = deck[baseVal + 1].value + deck[baseVal + 1].suit;
-         dcard2 = deck[baseVal + 2].value + deck[baseVal + 2].suit;
-         pcard2 = deck[baseVal + 3].value + deck[baseVal + 3].suit;
-
-         playerScore = deck[1].bjVal;
-         dealerScore = deck[2].bjVal;
-         card = deck[baseVal].value + deck[baseVal].suit;
+      deal: function (dealerHand, playerHand) {
 
          document.querySelector(DOMstrings.dealBtn).style.visibility = 'hidden';
 
+         dcard1Img = UIController.createImgFileName(dealerHand[0]);
+         pcard1Img = UIController.createImgFileName(playerHand[0]);
+         dcard2Img = UIController.createImgFileName(dealerHand[1]);
+         pcard2Img = UIController.createImgFileName(playerHand[1]);
 
-         document.querySelector(DOMstrings.dscore).textContent = '0';
-         document.querySelector(DOMstrings.pscore).textContent = '0';
+         playerScore = gameController.getPointTotal(playerHand);
+         dealerScore = gameController.getPointTotal(dealerHand)
 
-         document.querySelector(DOMstrings.dscore).textContent = dealerScore;
+         document.querySelector(DOMstrings.dscore).textContent = dealerScore - dealerHand[0].bjVal;
          document.querySelector(DOMstrings.pscore).textContent = playerScore;
 
-         document.querySelector(DOMstrings.pcard1).src = imagePath + pcard1 + '.png';
-         document.querySelector(DOMstrings.dcard2).src = imagePath + dcard2 + '.png';
-         document.querySelector(DOMstrings.pcard2).src = imagePath + pcard2 + '.png';
-
-         document.querySelector(DOMstrings.dscore).style.visibility = 'visible';
-         document.querySelector(DOMstrings.pscore).style.visibility = 'visible';
-
-         playerScore = deck[1].bjVal + deck[3].bjVal;
-         document.querySelector(DOMstrings.pscore).textContent = playerScore;
+         document.querySelector(DOMstrings.pcard1).src = pcard1Img;
+         document.querySelector(DOMstrings.dcard2).src = dcard2Img;
+         document.querySelector(DOMstrings.pcard2).src = pcard2Img;
 
          document.querySelector(DOMstrings.dcard1).style.visibility = 'visible';
 
          setTimeout(function () {
             document.querySelector(DOMstrings.pcard1).style.visibility = 'visible';
-         }, 1000);
+         }, 100);
 
          setTimeout(function () {
             document.querySelector(DOMstrings.dcard2).style.visibility = 'visible';
-         }, 2000);
+         }, 200);
 
          setTimeout(function () {
             document.querySelector(DOMstrings.pcard2).style.visibility = 'visible';
-         }, 3000);
-         // document.querySelector(DOMstrings.dcard2).style.visibility = 'visible';
-         //document.querySelector(DOMstrings.pcard2).style.visibility = 'visible';
+         }, 300);
 
          setTimeout(function () {
+            document.querySelector(DOMstrings.dscore).style.visibility = 'visible';
+         }, 400);
+         setTimeout(function () {
+            document.querySelector(DOMstrings.pscore).style.visibility = 'visible';
+         }, 500);
+         setTimeout(function () {
             document.querySelector(DOMstrings.playBtnContainer).style.display = 'inline-flex';
-         }, 4000);
+         }, 500);
 
       },
 
-      createImgFileName: function (deck) {
+      createImgFileName: function (card) {
          var imgFileName;
 
-         imgFileName = deck
+         imgFileName = imagePath + card.value + card.suit + '.png';
 
          return imgFileName;
 
+      },
+
+      addCard: function (card, play) {
+         var html, newHtml, element;
+
+         if (play === 'player') {
+            element = DOMstrings.pcardContainer;
+            html = '<div class="Card"><img id="pcardAdd" src="%src%" alt="card 3">';
+         } else if (play === 'dealer') {
+            element = DOMstrings.dcardContainer;
+            html = '<div class="Card"><img id="dcardAdd" src="%src%" alt="card 3">';
+         }
+
+         cardImg = UIController.createImgFileName(card);
+         console.log(cardImg);
+         newHtml = html.replace('%src%', cardImg);
+
+
+         document.querySelector(element).insertAdjacentHTML('beforeend', newHtml);
       }
+
    };
 
 })();
@@ -178,10 +193,14 @@ var UIController = (function () {
 var controller = (function (gameCtrl, UICtrl) {
 
    var deck, index;
+   var dealerHand = [];
+   var playerHand = [];
+
    var setupEventListeners = function () {
       var DOM = UICtrl.getDOMstrings();
       document.querySelector(DOM.startGameBtn).addEventListener('click', startGame);
       document.querySelector(DOM.dealBtn).addEventListener('click', deal);
+      document.querySelector(DOM.hitBtn).addEventListener('click', hit);
 
    };
 
@@ -189,13 +208,21 @@ var controller = (function (gameCtrl, UICtrl) {
       UICtrl.startGame();
       deck = gameCtrl.createDeck();
       deck = gameCtrl.shuffleDeck(deck);
-      console.log(deck)
    };
 
    var deal = function () {
+      dealerHand.push(deck.pop());
+      playerHand.push(deck.pop());
+      dealerHand.push(deck.pop());
+      playerHand.push(deck.pop());
+      console.log(dealerHand);
+      UICtrl.deal(dealerHand, playerHand);
 
-      UICtrl.deal(deck, baseVal);
+   };
 
+   var hit = function () {
+      var pcard3 = deck.pop();
+      UICtrl.addCard(pcard3);
    };
 
    return {
