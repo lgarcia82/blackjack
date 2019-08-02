@@ -9,7 +9,7 @@
 // GLOBAL VARIABLES
 var suits = ["S", "H", "C", "D"];
 var values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
-var baseVal, imagePath;
+var baseVal, imagePath, gameState;
 imagePath = '/resources/images/';
 
 
@@ -63,6 +63,10 @@ var gameController = (function () {
             x--;
          }
          return deck;
+      },
+
+      getCard: function() {
+         return deck.pop();
       },
 
       getPointTotal: function (hand) {
@@ -180,9 +184,11 @@ var UIController = (function () {
          cardImg = UIController.createImgFileName(card);
          console.log(cardImg);
          newHtml = html.replace('%src%', cardImg);
-
+         console.log(newHtml);
+         console.log(element);
 
          document.querySelector(element).insertAdjacentHTML('beforeend', newHtml);
+         document.querySelector(element).style.visibility = 'visible';
       }
 
    };
@@ -201,13 +207,14 @@ var controller = (function (gameCtrl, UICtrl) {
       document.querySelector(DOM.startGameBtn).addEventListener('click', startGame);
       document.querySelector(DOM.dealBtn).addEventListener('click', deal);
       document.querySelector(DOM.hitBtn).addEventListener('click', hit);
-
+      document.querySelector(DOM.standBtn).addEventListener('click', stand);
    };
 
    var startGame = function () {
       UICtrl.startGame();
       deck = gameCtrl.createDeck();
-      deck = gameCtrl.shuffleDeck(deck);
+      deck = gameCtrl.shuffleDeck(deck); 
+      console.log(deck);
    };
 
    var deal = function () {
@@ -215,20 +222,23 @@ var controller = (function (gameCtrl, UICtrl) {
       playerHand.push(deck.pop());
       dealerHand.push(deck.pop());
       playerHand.push(deck.pop());
-      console.log(dealerHand);
       UICtrl.deal(dealerHand, playerHand);
-
    };
 
    var hit = function () {
       var pcard3 = deck.pop();
-      UICtrl.addCard(pcard3);
+      UICtrl.addCard(pcard3, gameState);
+   };
+
+   var stand = function () {
+
    };
 
    return {
       init: function () {
          console.log('Application has started');
          baseVal = 0;
+         gameState = 'player'
          setupEventListeners();
       }
    };
