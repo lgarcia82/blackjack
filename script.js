@@ -9,15 +9,21 @@
 // GLOBAL VARIABLES
 var suits = ["S", "H", "C", "D"];
 var values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
-var baseVal, imagePath, gameState;
+var imagePath, turn;
 imagePath = '/resources/images/';
 
 
 var mainContainer = document.querySelector('.MainContainer');
+var resultLine = document.querySelector('.Result');
+var resultMsg = document.querySelector('.Result2');
 mainContainer.style.display = 'none';
+resultLine.style.display = 'none';
+resultMsg.style.display = 'none';
 
 // GAME CONTROLLER
 var gameController = (function () {
+
+   var deck = [];
 
    var Card = function (suit, value, bjVal) {
       this.suit = suit;
@@ -26,15 +32,20 @@ var gameController = (function () {
    };
 
    var data = {
-      Hand: {
+      hand: {
          dealer: [],
          player: []
+      },
+      score: {
+         dealer: 0,
+         player: 0
       }
    };
 
    return {
+
       createDeck: function () {
-         var deck = [];
+         // var deck = [];
 
          for (var i = 0; i < values.length; i++) {
 
@@ -65,17 +76,60 @@ var gameController = (function () {
          return deck;
       },
 
-      getCard: function() {
-         return deck.pop();
+      deal: function (turn) {
+         var card = deck.pop();
+
+         data.hand[turn].push(card);
+
+         if (card.value === 'A' && data.score[turn] < 11) {
+            card.bjVal = 11;
+         }
+
+         if (turn === 'dealer') {
+            data.score.dealer += card.bjVal;
+         } else if (turn === 'player') {
+            data.score.player += card.bjVal;
+         }
+
       },
 
-      getPointTotal: function (hand) {
-         var pointTotal = 0;
-         for (var i = 0; i < hand.length; i++) {
+      getCard: function (turn) {
+         var length = data.hand[turn].length - 1;
+         return data.hand[turn][length];
+      },
 
-            pointTotal += hand[i].bjVal;
+      addCard: function (card, turn) {
+
+         data.hand[turn].push(card);
+
+         if (card.value === 'A' && data.score[turn] < 11) {
+            card.bjVal = 11;
          }
-         return pointTotal;
+
+         if (turn === 'dealer') {
+            data.score.dealer += card.bjVal;
+         } else if (turn === 'player') {
+            data.score.player += card.bjVal;
+         }
+      },
+
+      getHand: function (player) {
+         return data.hand[player];
+      },
+
+      getPointTotal: function (turn) {
+         return data.score[turn];
+      },
+
+      gameOver: function () {
+         data.hand.dealer = [];
+         data.hand.player = [];
+         data.score.dealer = 0;
+         data.score.player = 0;
+      },
+
+      testing: function () {
+         console.log(data);
       }
    };
 
@@ -97,7 +151,8 @@ var UIController = (function () {
       dcard1: '#dcard1',
       dcard2: '#dcard2',
       pcard1: '#pcard1',
-      pcard2: '#pcard2'
+      pcard2: '#pcard2',
+      body: 'body'
    };
 
    return {
@@ -114,22 +169,24 @@ var UIController = (function () {
          document.querySelector(DOMstrings.pscore).style.visibility = 'hidden';
          document.querySelector(DOMstrings.startGameBtn).style.display = 'none';
          document.querySelector(DOMstrings.playBtnContainer).style.display = 'none';
+         document.querySelector(DOMstrings.body).style.background = 'url("resources/images/poker_table3.jpg")'
+
       },
 
       deal: function (dealerHand, playerHand) {
 
          document.querySelector(DOMstrings.dealBtn).style.visibility = 'hidden';
+         var pcard1Img, dcard2Img, pcard2Img;
 
-         dcard1Img = UIController.createImgFileName(dealerHand[0]);
          pcard1Img = UIController.createImgFileName(playerHand[0]);
          dcard2Img = UIController.createImgFileName(dealerHand[1]);
          pcard2Img = UIController.createImgFileName(playerHand[1]);
 
          playerScore = gameController.getPointTotal(playerHand);
-         dealerScore = gameController.getPointTotal(dealerHand)
+         dealerScore = gameController.getPointTotal(dealerHand);
 
-         document.querySelector(DOMstrings.dscore).textContent = dealerScore - dealerHand[0].bjVal;
-         document.querySelector(DOMstrings.pscore).textContent = playerScore;
+         document.querySelector(DOMstrings.dscore).textContent = gameController.getPointTotal('dealer') - dealerHand[0].bjVal;
+         document.querySelector(DOMstrings.pscore).textContent = gameController.getPointTotal('player');
 
          document.querySelector(DOMstrings.pcard1).src = pcard1Img;
          document.querySelector(DOMstrings.dcard2).src = dcard2Img;
@@ -155,9 +212,12 @@ var UIController = (function () {
          setTimeout(function () {
             document.querySelector(DOMstrings.pscore).style.visibility = 'visible';
          }, 500);
-         setTimeout(function () {
-            document.querySelector(DOMstrings.playBtnContainer).style.display = 'inline-flex';
-         }, 500);
+         if (turn === 'player') {
+            setTimeout(function () {
+               document.querySelector(DOMstrings.playBtnContainer).style.display = 'inline-flex';
+            }, 600);
+            setTimeout(UIController.playerTurn, 600);
+         }
 
       },
 
@@ -169,24 +229,27 @@ var UIController = (function () {
          return imgFileName;
 
       },
+      // Toggles turn indicator between player & dealer
+      playerTurn: function () {
+         document.querySelector('.Dealer').classList.toggle('active');
+         document.querySelector('.Player').classList.toggle('active');
+      },
 
-      addCard: function (card, play) {
+      addCard: function (turn, card) {
          var html, newHtml, element;
 
-         if (play === 'player') {
+         if (turn === 'player') {
             element = DOMstrings.pcardContainer;
             html = '<div class="Card"><img id="pcardAdd" src="%src%" alt="card 3">';
-         } else if (play === 'dealer') {
+         } else if (turn === 'dealer') {
             element = DOMstrings.dcardContainer;
             html = '<div class="Card"><img id="dcardAdd" src="%src%" alt="card 3">';
          }
 
          cardImg = UIController.createImgFileName(card);
-         console.log(cardImg);
          newHtml = html.replace('%src%', cardImg);
-         console.log(newHtml);
-         console.log(element);
 
+         document.querySelector(DOMstrings.pscore).textContent = gameController.getPointTotal('player');
          document.querySelector(element).insertAdjacentHTML('beforeend', newHtml);
          document.querySelector(element).style.visibility = 'visible';
       }
@@ -198,9 +261,7 @@ var UIController = (function () {
 // GlOBAL APP CONTROLLER
 var controller = (function (gameCtrl, UICtrl) {
 
-   var deck, index;
-   var dealerHand = [];
-   var playerHand = [];
+   var card, deck, pScore, dScore;
 
    var setupEventListeners = function () {
       var DOM = UICtrl.getDOMstrings();
@@ -213,32 +274,74 @@ var controller = (function (gameCtrl, UICtrl) {
    var startGame = function () {
       UICtrl.startGame();
       deck = gameCtrl.createDeck();
-      deck = gameCtrl.shuffleDeck(deck); 
+      deck = gameCtrl.shuffleDeck(deck);
       console.log(deck);
    };
 
    var deal = function () {
-      dealerHand.push(deck.pop());
-      playerHand.push(deck.pop());
-      dealerHand.push(deck.pop());
-      playerHand.push(deck.pop());
+
+      // Add dealt cards to game controller
+      gameCtrl.deal('dealer');
+      gameCtrl.deal('player');
+      gameCtrl.deal('dealer');
+      gameCtrl.deal('player');
+
+      pScore = gameCtrl.getPointTotal('player');
+      dScore = gameCtrl.getPointTotal('dealer');
+
+      if (pScore == 21) {
+         turn = 'dealer';
+      } else {
+         turn = 'player';
+      }
+
+      // Add dealt cards to the UI
+      var dealerHand, playerHand;
+      dealerHand = gameCtrl.getHand('dealer');
+      playerHand = gameCtrl.getHand('player');
       UICtrl.deal(dealerHand, playerHand);
+
    };
 
    var hit = function () {
-      var pcard3 = deck.pop();
-      UICtrl.addCard(pcard3, gameState);
+
+      // deal card in game controller
+      gameCtrl.deal(turn);
+      // get card dealt for UI
+      card = gameCtrl.getCard(turn);
+
+      var score = gameCtrl.getPointTotal(turn);
+
+      if (score == 21) {
+         // if player's turn, turn goes to dealer
+
+      } else if (score < 21) {
+         // still current player's turn
+
+      } else if (score > 21) {
+         // game over, bust
+
+      }
+
+
+
+
+      // deal card in UI
+      UICtrl.addCard(turn, card);
+
+      // next turn
+
    };
 
    var stand = function () {
-
+      turn = 'dealer';
    };
 
    return {
       init: function () {
          console.log('Application has started');
-         baseVal = 0;
-         gameState = 'player'
+         gameCtrl.gameOver();
+
          setupEventListeners();
       }
    };

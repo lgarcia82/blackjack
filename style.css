@@ -4,8 +4,9 @@
    box-sizing: border-box;
 }
 body{
-    background-image: url(resources/images/poker_table3.jpg);
-    background-repeat: no-repeat;
+    /* background-image: url("resources/images/poker_table3.jpg"); */
+    
+    background-image: linear-gradient(rgba(0,0,0, 0.7), rgba(0,0,0, 0.7)), url("resources/images/poker_table3.jpg");
     background-size: cover;
     font-family: 'Lato', sans-serif;
     color: floralwhite;
@@ -97,4 +98,19 @@ i {
     vertical-align: text-top;
     margin-top: -4px;
     transition: margin 0.3s;
+}
+
+.Result{
+   position: absolute;
+   font-size: 50px;
+   left: 500px;
+   right: 500px;
+}
+
+.Result2{
+   position: absolute;
+   font-size: 50px;
+   left: 500px;
+   right: 500px;
+   top: 300px;
 }
