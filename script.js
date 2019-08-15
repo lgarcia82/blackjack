@@ -178,9 +178,9 @@ var UIController = (function () {
          document.querySelector(DOMstrings.dealBtn).style.visibility = 'hidden';
          var pcard1Img, dcard2Img, pcard2Img;
 
-         pcard1Img = UIController.createImgFileName(playerHand[0]);
-         dcard2Img = UIController.createImgFileName(dealerHand[1]);
-         pcard2Img = UIController.createImgFileName(playerHand[1]);
+         pcard1Img = this.createImgFileName(playerHand[0]);
+         dcard2Img = this.createImgFileName(dealerHand[1]);
+         pcard2Img = this.createImgFileName(playerHand[1]);
 
          playerScore = gameController.getPointTotal(playerHand);
          dealerScore = gameController.getPointTotal(dealerHand);
@@ -227,7 +227,6 @@ var UIController = (function () {
          imgFileName = imagePath + card.value + card.suit + '.png';
 
          return imgFileName;
-
       },
       // Toggles turn indicator between player & dealer
       playerTurn: function () {
@@ -250,8 +249,23 @@ var UIController = (function () {
          newHtml = html.replace('%src%', cardImg);
 
          document.querySelector(DOMstrings.pscore).textContent = gameController.getPointTotal('player');
+         document.querySelector(DOMstrings.dscore).textContent = gameController.getPointTotal('dealer');
          document.querySelector(element).insertAdjacentHTML('beforeend', newHtml);
          document.querySelector(element).style.visibility = 'visible';
+      },
+
+      flipDealerCard: function () {
+         var dcard1Img, dealerScore, dealerHand;
+
+         dealerHand = gameController.getHand('dealer');
+         dcard1Img = UIController.createImgFileName(dealerHand[0]);
+         document.querySelector(DOMstrings.dcard1).src = dcard1Img;
+         dealerScore = gameController.getPointTotal('dealer');
+         document.querySelector(DOMstrings.dscore).textContent = dealerScore;
+
+         this.playerTurn();
+
+         document.querySelector(DOMstrings.playBtnContainer).style.display = 'none';
       }
 
    };
@@ -261,7 +275,7 @@ var UIController = (function () {
 // GlOBAL APP CONTROLLER
 var controller = (function (gameCtrl, UICtrl) {
 
-   var card, deck, pScore, dScore;
+   var card, deck, pScore, dScore, gameOver;
 
    var setupEventListeners = function () {
       var DOM = UICtrl.getDOMstrings();
@@ -272,6 +286,7 @@ var controller = (function (gameCtrl, UICtrl) {
    };
 
    var startGame = function () {
+      gameOver = false;
       UICtrl.startGame();
       deck = gameCtrl.createDeck();
       deck = gameCtrl.shuffleDeck(deck);
@@ -291,8 +306,10 @@ var controller = (function (gameCtrl, UICtrl) {
 
       if (pScore == 21) {
          turn = 'dealer';
+         controller.dealersTurn();
       } else {
          turn = 'player';
+         
       }
 
       // Add dealt cards to the UI
@@ -313,10 +330,8 @@ var controller = (function (gameCtrl, UICtrl) {
       var score = gameCtrl.getPointTotal(turn);
 
       if (score == 21) {
-         // if player's turn, turn goes to dealer
-
-      } else if (score < 21) {
-         // still current player's turn
+         // player blackjack, dealers turn
+         controller.dealersTurn();
 
       } else if (score > 21) {
          // game over, bust
@@ -335,6 +350,7 @@ var controller = (function (gameCtrl, UICtrl) {
 
    var stand = function () {
       turn = 'dealer';
+      controller.dealersTurn();
    };
 
    return {
@@ -343,6 +359,38 @@ var controller = (function (gameCtrl, UICtrl) {
          gameCtrl.gameOver();
 
          setupEventListeners();
+      },
+
+      dealersTurn: function () {
+         UICtrl.flipDealerCard();
+         console.log(pScore);
+         while (gameOver == false) {
+            dScore = gameCtrl.getPointTotal('dealer');
+            pScore = gameCtrl.getPointTotal('player');
+
+            if(dScore < pScore){
+               gameCtrl.deal(turn);
+               // get card dealt for UI
+               card = gameCtrl.getCard(turn);
+
+               UICtrl.addCard(turn, card);
+
+               gameOver = false;
+            } else if (dScore == pScore && dScore < 21){
+                gameOver = true;
+                
+            }
+            else{
+               gameOver = true;
+               
+            }
+
+         }
+         console.log(dScore);
+      },
+      
+      gameOver: function () {
+
       }
    };
 
