@@ -30,15 +30,13 @@ const imagePath = '/images/'
 const cardBack = imagePath + 'red_back.png'
 
 const mainContainer = document.querySelector('.MainContainer')
-const bustText = document.querySelector('.bust')
-const playerLosesMsg = document.querySelector('.player_loses')
-const playerWinsMsg = document.querySelector('.player_wins')
+const resultDetail = document.querySelector('.gameDetail')
+const resultDisplay = document.querySelector('.gameResult')
 
 // SET DISPLAYS
-bustText.style.display = 'none'
 mainContainer.style.display = 'none'
-playerLosesMsg.style.display = 'none'
-playerWinsMsg.style.display = 'none'
+resultDetail.style.display = 'none'
+resultDisplay.style.display = 'none'
 
 // GAME CONTROLLER
 const gameController = (function () {
@@ -341,25 +339,32 @@ const UIController = (function () {
 
       // DISPLAY BUST
       if(result === 'bust'){
-        bustText.style.display = 'block'
-        playerLosesMsg.style.display = 'block'
+        resultDetail.textContent = 'BUST'
+        resultDetail.style.display = 'block'
+        resultDisplay.textContent = 'DEALER WINS'
+        resultDisplay.style.display = 'block'
       }
       // DISPLAY DEALER WINS
       else if(result === 'dealerWins'){
-        playerLosesMsg.style.display = 'block'
+        resultDisplay.textContent = 'Dealer Wins'
+        resultDisplay.style.display = 'block'
       }
       // DISPLAY PLAYER WINS
       else if(result === 'playerWins'){
-        playerWinsMsg.style.display = 'block'
+        resultDisplay.textContent = 'Player Wins'
+        resultDisplay.style.display = 'block'
+      }
+      // DISPLAY PUSH, NO WINNER
+      else if(result === 'push'){
+        resultDetail.textContent = 'PUSH'
+        resultDetail.style.display = 'block'
       }
 
     },
 
     clearResults: function() {
-      
-      bustText.style.display = 'none'
-      playerLosesMsg.style.display = 'none'
-      playerWinsMsg.style.display = 'none'
+      resultDetail.style.display = 'none'
+      resultDisplay.style.display = 'none'
     }
   }
 })()
@@ -397,7 +402,17 @@ const controller = (function (gameCtrl, UICtrl) {
     UICtrl.deal(dealerHand, playerHand)
     let pScore = gameCtrl.getPointTotal(TURN.PR)
     if(pScore === 21){
+      // HIDE GAME BUTTONS, FLIP DEALERS CARD OVER, 
       UICtrl.togPlayBtn()
+      
+      let dealerHand = gameCtrl.getHand(TURN.DR)
+      setTimeout(function () {
+        UICtrl.flipDealerCard(dealerHand[0])
+      }, 2000)
+
+      //RUN DEALER'S TURN
+      dealersTurn2()
+
     }
   }
 
@@ -441,7 +456,7 @@ const controller = (function (gameCtrl, UICtrl) {
       }, 2000)
 
       //RUN DEALER'S TURN
-      dealersTurn1()
+      dealersTurn2()
     }
     
 
@@ -493,10 +508,8 @@ const controller = (function (gameCtrl, UICtrl) {
           console.log('case 2')
           
           let card = gameCtrl.dealCard(TURN.DR)
-          setTimeout(function (){
-            UICtrl.addCard(TURN.DR, card)
-            UICtrl.updateScore(TURN.DR)
-          }, 0)
+          UICtrl.addCard(TURN.DR, card)
+          UICtrl.updateScore(TURN.DR)
           
         } else if(dScore === 21){
           console.log('case 3')
@@ -543,12 +556,48 @@ const controller = (function (gameCtrl, UICtrl) {
   let dealersTurn2 = function () {
     let gameOver = false
     let dScore, pScore
-    while(!gameOver){
-      dScore = gameCtrl.getPointTotal(TURN.DR)
-      pScore = gameCtrl.getPointTotal(TURN.PR)
+    setInterval(() => {
+      while(!gameOver){
+        dScore = gameCtrl.getPointTotal(TURN.DR)
+        pScore = gameCtrl.getPointTotal(TURN.PR)
+  
+        if(dScore <= pScore && dScore < 21){
+          let card = gameCtrl.dealCard(TURN.DR)
+          UICtrl.addCard(TURN.DR, card)
+          UICtrl.updateScore(TURN.DR)
+        } else if(dScore === 21){
+          // push
+          gameOver = true
+          UICtrl.displayResult('push')
+          setTimeout(function () {
+            UICtrl.resetGame()
+          }, 2000)
+    
+          // REVEAL NEWGAME BUTTON
+          setTimeout(function () {
+            UICtrl.clearResults()
+            UICtrl.togDealBtn()
+            gameCtrl.newGame()
+          }, 3000)
+        } else if(dScore > 21){
+          gameOver = true
 
-      
-    }
+          UICtrl.displayResult('playerWins')
+  
+          setTimeout(function () {
+            UICtrl.resetGame()
+          }, 2000)
+    
+          // REVEAL NEWGAME BUTTON
+          setTimeout(function () {
+            UICtrl.clearResults()
+            UICtrl.togDealBtn()
+            gameCtrl.newGame()
+          }, 3000)
+        }
+      }
+    }, 1000);
+   
   }
 
   return {
