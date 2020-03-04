@@ -1,116 +1,22 @@
-* {
-   margin: 0;
-   padding: 0;
-   box-sizing: border-box;
-}
-body{
-    /* background-image: url("resources/images/poker_table3.jpg"); */
-    
-    background-image: linear-gradient(rgba(0,0,0, 0.7), rgba(0,0,0, 0.7)), url("resources/images/poker_table3.jpg");
-    background-size: cover;
-    font-family: 'Lato', sans-serif;
-    color: floralwhite;
-}
-.MainContainer{
-    margin-left: 3%;
-    margin-right: 3%;
-}
-#title{
-    text-align: center;
-    font-size: 60px;
-    padding-top: 20px
-}
-
-.Card {
-    width: 70px;
-    height: 105px;
-    display: inline-flex;
-    padding-top: 30px;
-}
-
-.Card img{
-    width: 70px;
-    height:105px;
-}
-.Score{
-    padding-top: 35px;
-    font-size: 50px;
-    font-weight: 600;
-}
-.Dealer{
-    width: 50%;
-    float: left;
-    margin-top: 5%;
-    text-align: center;
-    font-size: 30px;
-}
-
-.Player{
-    width: 50%;
-    float: left;
-    margin-top: 5%;
-    text-align: center;
-    font-size: 30px;
-}
-.active .player-name::after{
-    content: "\22C6";
-    position: absolute;
-    margin-left: 5px;
-}
-
-.NewGameBtnContainer{
-    text-align: center;
-    margin-top: 50px;
-}
-.DealBtnContainer{
-    position: relative;
-    text-align: center;
-}
-.PlayBtnContainer{
-    text-align: center;
-    display: flex;
-    width: 20%;
-    float:right;
-    margin-right: 16%;
-}
-#dealBtn{
-    padding-top: 100px;
-}
-button{
-    width: 50%;
-    height: 50px;
-    color: floralwhite;
-    background: none;
-    border: none;
-    font-size: 20px;
-}
-button:hover { font-weight: 600; }
-button:hover i { margin-right: 20px; }
-
-button:focus { outline: none; }
-
-i {
-    color: #EB4D4D;
-    display: inline-block;
-    margin-right: 15px;
-    font-size: 32px;
-    line-height: 1;
-    vertical-align: text-top;
-    margin-top: -4px;
-    transition: margin 0.3s;
-}
-
-.Result{
-   position: absolute;
-   font-size: 50px;
-   left: 500px;
-   right: 500px;
-}
-
-.Result2{
-   position: absolute;
-   font-size: 50px;
-   left: 500px;
-   right: 500px;
-   top: 300px;
-}
+*{margin:0;padding:0;box-sizing:border-box}
+body{height:100vh;background-image:linear-gradient(rgba(0,0,0,.7),rgba(0,0,0,.7)),url(images/poker_table3.jpg);background-size:cover;overflow:hidden;font-family:Lato,sans-serif;color:#fffaf0}
+.MainContainer{margin-left:3%;margin-right:3%}
+#title{text-align:center;font-size:60px;padding-top:20px}
+.Card{width:70px;height:105px;display:inline-flex;padding-top:30px}
+.Card img{width:70px;height:105px}
+.Score{padding-top:35px;font-size:50px;font-weight:600}
+.Dealer{width:50%;float:left;margin-top:5%;text-align:center;font-size:30px}
+.Player{width:50%;float:left;margin-top:5%;text-align:center;font-size:30px}
+.active .player-name::after{content:"\22C6";position:absolute;margin-left:5px}
+.NewGameBtnContainer{margin:0 auto;text-align:center;margin-top:50px}
+.DealBtnContainer{position:absolute;left:50%;top:50%}
+.PlayBtnContainer{text-align:center;display:inline-flex;margin:0 auto;width:20%;float:right;margin:5% 15% 0 0}
+#dealBtn{padding-top:100px}
+button{width:50%;height:50px;color:#fffaf0;background:0 0;border:none;font-size:20px}
+button:hover{font-weight:600}
+button:hover i{margin-right:20px}
+button:focus{outline:0}
+i{color:#eb4d4d;display:inline-block;margin-right:15px;font-size:32px;line-height:1;vertical-align:text-top;margin-top:-4px;transition:margin .3s}
+.bust{position:absolute;font-size:50px;left:500px;right:500px}
+.player_wins{position:absolute;font-size:50px;left:500px;right:500px;top:300px}
+.player_loses{position:absolute;font-size:50px;left:500px;right:500px;top:300px}
